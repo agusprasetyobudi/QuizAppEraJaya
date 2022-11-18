@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\SocialLoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,8 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-Route::get('social/{provider}',[SocialLoginController::class,'SocialLogin'])->name('SocialLoginProvider');
-Route::get('social/{callback}/get',[SocialLoginController::class,'SocialCallBack'])->name('SocialLoginCallback');
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
