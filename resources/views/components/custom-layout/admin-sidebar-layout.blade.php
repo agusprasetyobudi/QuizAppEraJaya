@@ -36,8 +36,8 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-                <li class="nav-item">
-                    <a href="{{route('Admin.quiz.index')}}" class="nav-link">
+                <li class="nav-item ">
+                    <a href="{{route('Admin.quiz.index')}}" class="nav-link active">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             Exam
@@ -49,6 +49,14 @@
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             User
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" id="logout" class="nav-link">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>
+                            Logout
                         </p>
                     </a>
                 </li>

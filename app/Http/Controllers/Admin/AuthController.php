@@ -36,6 +36,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-        return redirect()->route('Admin.Dashboard');
+        return response()->json(['message'=>'You Logged Out From System'],200);
     }
 }

@@ -70,6 +70,61 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <!-- AdminLTE App -->
     <script src="{{asset('assets/js/adminlte.min.js')}}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#logout').click(function(){
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Are you sure log out ?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Logout !!',
+                }).then((result)=>{
+                    if(result.isConfirmed){
+                        waitProcess()
+
+                    $.ajax({
+                        url: "{{ route('Admin.Logout') }}",
+                        headers: {
+                            'X-CSRF-TOKEN':"{{csrf_token()}}",
+                            'accept': 'application/json'
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function(params) {
+                            Swal.close()
+                            Swal.fire({
+                                icon: 'success',
+                                title: params.message
+                            })
+                            location.reload()
+                        },
+                        error: function(xhr, thr, err) {
+                            Swal.close()
+                            Swal.fire({
+                                icon: 'error',
+                                title: xhr.responseJSON.message
+                            })
+                        }
+                    })
+                    }
+                })
+            })
+        })
+        function waitProcess() {
+            Swal.fire({
+                        title: 'Wait ...',
+                        didOpen() {
+                            Swal.showLoading()
+                        },
+                        willClose() {
+                            Swal.hideLoading()
+                        },
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        allowEnterKey: false
+                    })
+        }
+    </script>
     {{$js ?? ''}}
 </body>
 

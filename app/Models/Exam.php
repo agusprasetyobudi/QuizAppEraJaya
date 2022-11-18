@@ -15,4 +15,9 @@ class Exam extends Model
         'duration',
         'created_by',
     ];
+
+    public function getQuestion()
+    {
+        return $this->hasMany(ExamQuestion::class,'exam_id','id');
+    }
 }

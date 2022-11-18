@@ -95,11 +95,41 @@
                         {data:'action', name:'action'}
                     ]
                 })
-                $('#table-exam tbody').on('click','.edit',table,function(){
-                    alert('test edit')
-                })
                 $('#table-exam tbody').on('click','.delete',table,function(){
-                    alert('test delete')
+                    Swal.fire({
+                        title: 'Are you sure delete ?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confrimButtonText: 'Delete !!'
+                    }).then((result)=>{
+                        if(result.isConfirmed){
+                            let urlDelete = "{{route('Admin.quiz.destroy',':id')}}"
+                                urlDelete = urlDelete.replace(':id',$(this).data('id'))
+                            waitProcess()
+                            $.ajax({
+                                url:urlDelete,
+                                headers:{
+                                    'X-CSRF-TOKEN': "{{csrf_token()}}"
+                                },
+                                type: 'delete',
+                                success: function(params){
+                                    Swal.close()
+                                    Swal.fire({
+                                        title: params.message,
+                                        icon: 'success',
+                                    })
+                                    table.ajax.reload()
+                                },error:function(xhr, thr, err){
+                                    Swal.close()
+                                    Swal.fire({
+                                        title: xhr.responseJSON.message,
+                                        icon: 'error',
+                                    })
+                                    table.ajax.reload()
+                                }
+                            })
+                        }
+                    })
                 })
             })
         </script>

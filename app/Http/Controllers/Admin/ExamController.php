@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ExamQuestionResource;
 use App\Models\Exam;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,7 +26,8 @@ class ExamController extends Controller
             return DataTables::of($model)
                               ->addIndexColumn()
                               ->addColumn('action',function($row){
-                                return "<a href='javascript:void(0)' class='edit' data-id='$row->id'><i class='fas fa-pencil-alt'></i></a> <a href='javascript:void(0)' class='delete' data-id='$row->id'><i class='fas fa-trash'></i></a>";
+                                $urlUpdate = route('Admin.quiz.edit',['quiz'=>$row->id]);
+                                return "<a href='$urlUpdate' class='edit'><i class='fas fa-pencil-alt'></i></a> <a href='javascript:void(0)' class='delete' data-id='$row->id'><i class='fas fa-trash'></i></a>";
                               })
                               ->rawColumns(['action'])
                               ->make(true);
@@ -94,7 +96,12 @@ class ExamController extends Controller
      */
     public function edit($id)
     {
-        //
+       try {
+        $model = Exam::find($id);
+        return view('admin.exam.update',['exam'=>$model,'id'=>$id]);
+       } catch (\Throwable $th) {
+        //throw $th;
+       }
     }
 
     /**
@@ -106,7 +113,12 @@ class ExamController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            Exam::find($id)->fill($request->except('_token'))->save();
+            return response()->json(['message'=>'Exam Head Has Update'],200);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**
@@ -117,6 +129,13 @@ class ExamController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $model = Exam::find($id);
+            $model->getQuestion()->delete();
+            $model->delete();
+            return response()->json(['message'=>'Exam Has Deleted'],200);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }

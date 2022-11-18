@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ExamQuestionResource;
 use App\Models\ExamQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -46,7 +47,12 @@ class QuestionController extends Controller
                 'option' => json_encode($request->option),
                 'score'=> $this->countScore($count == 0 ?1:$count+1)
             ]);
-            $model->create($request->except('_token'));
+            if($request->has('update')){
+                $model->where('id',$request->id)->update($request->except('_token','update','id','score'));
+                return response()->json(['message'=>'Question Has Update']);
+            }else{
+                $model->create($request->except('_token','update','id'));
+            }
             $model->where('exam_id',$request->exam_id)->update(['score'=>$request->score]);
             return response()->json(['message'=>'Question Has Added']);
         } catch (\Throwable $th) {
@@ -81,7 +87,8 @@ class QuestionController extends Controller
      */
     public function edit($id)
     {
-
+        $model = ExamQuestion::find($id);
+        return new ExamQuestionResource($model);
     }
 
     /**
